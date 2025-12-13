@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour{
@@ -8,12 +9,9 @@ public class Spawner : MonoBehaviour{
     public float mMaximumSpawnRange = 5.0f; // 몬스터 최대 스폰 범위
     public float mMinimumSpawnRange = 3.0f; // 몬스터 최소 스폰 범위
 
-
-    public GameObject monsterPrefab;
-
-    private void Awake(){
-    }
-
+    public static List<Monster> monsterList = new List<Monster>();
+    public static List<Player> playerList = new List<Player>();
+    
     private void Start(){
         StartCoroutine(SpawnMonsterCoroutine());
     }
@@ -50,9 +48,12 @@ public class Spawner : MonoBehaviour{
                 
                 value.transform.position = pos;
                 value.transform.LookAt(Vector3.zero);
+                
+                // 스폰된 몬스터 리스트에 삽입
+                monsterList.Add(value.GetComponent<Monster>());
             });
 
-            StartCoroutine(DespawnMonsterCoroutine(go));
+            // StartCoroutine(DespawnMonsterCoroutine(go));
         }
 
         // 시간까지 대기

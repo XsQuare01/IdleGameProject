@@ -1,0 +1,75 @@
+using UnityEngine;
+
+public class Character : MonoBehaviour
+{
+    protected static readonly int IsIdle = Animator.StringToHash("IsIdle");
+    protected static readonly int IsMove = Animator.StringToHash("IsMove");
+    protected static readonly int IsAttack = Animator.StringToHash("IsAttack");
+    
+    [SerializeField] private Animator animator;
+    
+    public double hp;
+    public double attack;
+    public float attackSpeed = 1.0f;
+    protected bool isAttacking;
+    protected float attackRange = 3.0f;    // 공격 범위
+    protected float targetRange = 5.0f;    // 추적 범위
+
+    
+    [SerializeField] private Transform bulletTransform;
+
+    protected Transform target;
+    
+    protected virtual void Start() {
+        animator = animator ? animator : GetComponent<Animator>();
+    }
+    
+    /// <summary>
+    /// 몬스터 애니메이션 적용 함수
+    /// </summary>
+    /// <param name="param">이동 상태</param>
+    protected void AnimatorChange(int param) {
+        if (param == IsAttack){
+            animator.SetTrigger(IsAttack);
+            return;
+        }
+        
+        animator.SetBool(IsIdle, false);
+        animator.SetBool(IsMove, false);
+        
+        animator.SetBool(param, true);
+    }
+
+    /// <summary>
+    /// 가장 가까운 타겟 찾기
+    /// </summary>
+    protected void FindClosestTarget<T>(T[] targets) where T : Component{
+        var maxDistance = targetRange;
+        Transform closest = null;
+        foreach (var monster in targets){
+            var dist = Vector3.Distance(transform.position,monster.transform.position);
+
+            if (dist >= maxDistance) continue;
+            
+            // 가장 가까운 몬스터
+            closest = monster.transform;
+            maxDistance = dist;
+        }
+
+        target = closest;
+        if (target != null){
+            transform.LookAt(target.position);
+        }
+    }
+
+    protected virtual void Bullet(){
+        // 탄환 소환
+        BaseManager.Pool.PoolingObject("Bullet").Get((value) => {
+            
+            // 탄환 위치 변경
+            value.transform.position = bulletTransform.position;
+        });
+    }
+    
+    protected void InitAttack() => isAttacking = false;
+}
