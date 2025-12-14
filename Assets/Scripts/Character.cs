@@ -68,6 +68,9 @@ public class Character : MonoBehaviour
             
             // 탄환 위치 변경
             value.transform.position = bulletTransform.position;
+
+            // TODO: bullet, muzzle 이름 변경
+            value.GetComponent<Bullet>().Init(target, 10, "CH_01");
         });
     }
     
