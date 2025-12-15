@@ -19,6 +19,8 @@ public class Character : MonoBehaviour
     [SerializeField] private Transform bulletTransform;
 
     protected Transform target;
+
+    public bool isDead;
     
     protected virtual void Start() {
         animator = animator ? animator : GetComponent<Animator>();
@@ -63,6 +65,11 @@ public class Character : MonoBehaviour
     }
 
     protected virtual void Bullet(){
+        // 타겟 없으면 리턴
+        if (target != null){
+            return;
+        }
+        
         // 탄환 소환
         BaseManager.Pool.PoolingObject("Bullet").Get((value) => {
             

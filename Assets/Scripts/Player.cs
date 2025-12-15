@@ -10,13 +10,12 @@ public class Player : Character{
         startRot = transform.rotation;
     }
 
-    void Update(){
+    private void Update(){
+        // 타겟 찾기
+        FindClosestTarget(Spawner.monsterList.ToArray());
+        
         // 타겟이 탐지 범위 내에 없음
         if (target == null){
-            
-            // 타겟 찾기
-            FindClosestTarget(Spawner.monsterList.ToArray());
-            
             // 맨 처음 위치로 복귀
             var targetPos = Vector3.Distance(startPos, transform.position);
             if (targetPos > 0.1f){
@@ -30,6 +29,13 @@ public class Player : Character{
                 AnimatorChange(IsIdle);
             }
             return;
+        }
+
+        // 타겟이 이미 죽음
+        if (target.GetComponent<Character>().isDead){
+            
+            // 타겟 재탐색
+            FindClosestTarget(Spawner.monsterList.ToArray());
         }
         
         // 타겟이 탐지 범위 내에 존재

@@ -8,6 +8,8 @@ public class Bullet : MonoBehaviour{
     private Vector3 targetPos;
     private double damage;
     private string characterName;
+
+    private bool bulletGetHit = false;
     
     Dictionary<string, GameObject> projectiles = new Dictionary<string, GameObject>();
     Dictionary<string, ParticleSystem> muzzles = new Dictionary<string, ParticleSystem>();
@@ -33,22 +35,35 @@ public class Bullet : MonoBehaviour{
         transform.LookAt(this.target);
         targetPos = target.position;
         damage = dmg;
+        bulletGetHit = false;
         this.characterName = characterName;
         
         // bullet 활성화
         projectiles[characterName].gameObject.SetActive(true);
     }
 
-    void Update(){
+    private void Update(){
+
+        if (bulletGetHit){
+            return;
+        }
+
+        // Bullet이 몬스터 상단 공격하도록 조정
+        targetPos.y = 0.5f;
         transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * bulletSpeed);
 
         if (Vector3.Distance(transform.position, targetPos) <= 0.1f){
             if (target != null){
-                target.GetComponent<Character>().hp -= damage;
+                
+                // TODO: Bullet damage 수정
+                // TODO: GetComponent<> 제거
+                target.GetComponent<Monster>().GetDamaged(10);
+                bulletGetHit = true;
                 
                 // 충돌 시 bullet 비활성화 & muzzle 활성화
                 projectiles[characterName].gameObject.SetActive(false);
                 muzzles[characterName].Play();
+                
                 StartCoroutine(ReturnMuzzles(muzzles[characterName]));
             }
         }
@@ -58,6 +73,8 @@ public class Bullet : MonoBehaviour{
         // Muzzle 꺼질 때까지 대기
         yield return new WaitWhile(() => muzzle.IsAlive(true));
         
+        // Object pool로 다시 돌려놓기
         BaseManager.Pool.poolDictionary["Bullet"].Return(gameObject);
     }
+    
 }
