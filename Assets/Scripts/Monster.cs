@@ -52,7 +52,7 @@ public class Monster : Character{
         var current = 0.0f; // 현재 시각
         var percent = 0.0f; // 진행도
         var startScale = 0.0f; // 초기 크기
-        var endScale = transform.localScale.x;
+        var endScale = 7f;
 
         // 1초동안 진행
         while (percent < 1){
@@ -80,8 +80,13 @@ public class Monster : Character{
             return;
         }
         
-        // 데미지 감소
+        // 몬스터 체력 감소
         hp -= dmg;
+        
+        // 피격 데미지 출력
+        BaseManager.Pool.PoolingObject("DamageText").Get((value) => {
+            value.GetComponent<DamageText>().Init(transform.position, dmg, false);
+        });
 
         // 몬스터 사망
         if (hp <= 0){
@@ -89,7 +94,6 @@ public class Monster : Character{
             // 사망 처리
             isDead = true;
             Spawner.monsterList.Remove(this);
-            
             
             var smokeObj = BaseManager.Pool.PoolingObject("Smoke").Get((value) => {
                 

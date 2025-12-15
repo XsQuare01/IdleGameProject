@@ -31,9 +31,19 @@ public class BaseManager : MonoBehaviour
         StartCoroutine(ReturnParticleCoroutine(obj,path));
     }
 
+    public void ReturnObject(GameObject obj, string path, float duration){
+        StartCoroutine(ReturnObjectCoroutine(obj,path, duration));
+    }
+
     private IEnumerator ReturnParticleCoroutine(GameObject obj, string path){
-        ParticleSystem ps = obj.GetComponent<ParticleSystem>();
+        var ps = obj.GetComponent<ParticleSystem>();
         yield return new WaitWhile(() => ps.IsAlive(true));
+        
+        Pool.poolDictionary[path].Return(obj);
+    }
+
+    private IEnumerator ReturnObjectCoroutine(GameObject obj, string path, float duration){
+        yield return new WaitForSeconds(duration);
         
         Pool.poolDictionary[path].Return(obj);
     }

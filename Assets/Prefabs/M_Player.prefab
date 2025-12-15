@@ -1295,8 +1295,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b61dbf83d851bc24ead89e2ebc848fc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
-  animator: {fileID: 0}
+  animator: {fileID: 491077139716801074}
   hp: 0
   attack: 0
-  attackSpeed: 0
-  bulletTransform: {fileID: 0}
+  attackSpeed: 1
+  bulletTransform: {fileID: 6059376222540032755}
+  isDead: 0

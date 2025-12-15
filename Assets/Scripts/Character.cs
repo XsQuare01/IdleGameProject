@@ -64,9 +64,13 @@ public class Character : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Player character의 Event function으로 등록되어 있음
+    /// 따라서, 해당 프레임에 자동으로 호출됨   
+    /// </summary>
     protected virtual void Bullet(){
         // 타겟 없으면 리턴
-        if (target != null){
+        if (target == null){
             return;
         }
         

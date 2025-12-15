@@ -42,7 +42,8 @@ public class ObjectPool: IPool{
     public void Return(GameObject obj, Action<GameObject> action = null){
         poolQueue.Enqueue(obj);
         
-        obj.transform.parent = parentTransform;
+        obj.transform.SetParent(parentTransform);
+        // obj.transform.parent = parentTransform;
         obj.SetActive(false);
         action?.Invoke(obj);
     }
@@ -98,7 +99,8 @@ public class PoolManager
         
         // Pool에서 object 생성
         var go = BaseManager.Instance.InstantiatePath(path);
-        go.transform.parent = poolDictionary[path].parentTransform;
+        go.transform.SetParent(poolDictionary[path].parentTransform);
+        // go.transform.parent = poolDictionary[path].parentTransform;
 
         poolDictionary[path].Return(go);
     }
