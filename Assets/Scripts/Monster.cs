@@ -85,7 +85,7 @@ public class Monster : Character{
         
         // 피격 데미지 출력
         BaseManager.Pool.PoolingObject("DamageText").Get((value) => {
-            value.GetComponent<DamageText>().Init(transform.position, dmg, false);
+            value.GetComponent<DamageText>().Init(transform.position, dmg, true);
         });
 
         // 몬스터 사망
@@ -95,6 +95,7 @@ public class Monster : Character{
             isDead = true;
             Spawner.monsterList.Remove(this);
             
+            // 몬스터 사망 이펙트
             var smokeObj = BaseManager.Pool.PoolingObject("Smoke").Get((value) => {
                 
                 // 0.5f 더하는 이유: smoke가 조금 높게 스폰되도록 함
@@ -105,6 +106,11 @@ public class Monster : Character{
                 BaseManager.Instance.ReturnParticle(value, "Smoke");
                 
                 // StartCoroutine(ReturnParticle("Smoke", value, value.GetComponent<ParticleSystem>()));
+            });
+            
+            // 몬스터 보상 드랍 & 이펙트
+            var coinObj = BaseManager.Pool.PoolingObject("Coin").Get((value) => {
+                value.GetComponent<Coin>().Init(transform.position);
             });
             
             // TODO: 몬스터 이름 string이 아닌 enum으로 변경 ("Skeleton" -> Skeleton)

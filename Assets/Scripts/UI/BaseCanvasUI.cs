@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BaseCanvasUI : MonoBehaviour{
     public static BaseCanvasUI Instance;
-
+    
     private void Awake(){
         Initialize();
     }
@@ -16,4 +16,13 @@ public class BaseCanvasUI : MonoBehaviour{
             Destroy(gameObject);
         }
     }
+    
+    public Transform coinTransform;
+
+    [SerializeField] private Transform layer;
+    
+    public Transform GetLayer(int value){
+        return layer.GetChild(value);
+    }
+
 }
