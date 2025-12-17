@@ -108,10 +108,18 @@ public class Monster : Character{
                 // StartCoroutine(ReturnParticle("Smoke", value, value.GetComponent<ParticleSystem>()));
             });
             
-            // 몬스터 보상 드랍 & 이펙트
+            // 코인 드랍 & 이펙트
             var coinObj = BaseManager.Pool.PoolingObject("Coin").Get((value) => {
                 value.GetComponent<Coin>().Init(transform.position);
             });
+
+            // 아이템 드랍 & 이펙트
+            // TODO: 드랍율 적용하기
+            for (var i = 0; i < 3; i++){
+                BaseManager.Pool.PoolingObject("Item").Get((value) => {
+                    value.GetComponent<Item>().Init(transform.position);
+                });
+            }
             
             // TODO: 몬스터 이름 string이 아닌 enum으로 변경 ("Skeleton" -> Skeleton)
             BaseManager.Pool.poolDictionary["Skeleton"].Return(gameObject);

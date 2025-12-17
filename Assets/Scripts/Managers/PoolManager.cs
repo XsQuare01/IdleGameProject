@@ -42,9 +42,10 @@ public class ObjectPool: IPool{
     public void Return(GameObject obj, Action<GameObject> action = null){
         poolQueue.Enqueue(obj);
         
+        obj.SetActive(false);
         obj.transform.SetParent(parentTransform);
         // obj.transform.parent = parentTransform;
-        obj.SetActive(false);
+        
         action?.Invoke(obj);
     }
 }
