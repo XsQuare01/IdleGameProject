@@ -85,7 +85,6 @@ public class Item : MonoBehaviour{
 
     /// <summary>
     /// 아이템 희귀도에 따른 아이템 이름 색상 결정
-    /// 예: <color=#FFFFFF>Text_item</color>
     /// </summary>
     /// <param name="itemName">아이템 이름</param>
     private void SetItemNameColor(string itemName){
