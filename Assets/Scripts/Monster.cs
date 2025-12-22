@@ -5,6 +5,10 @@ using UnityEngine;
 public class Monster : Character{
     [SerializeField] private float mSpeed = 0.5f;
 
+    private Vector3 startPos;
+    private Quaternion startRot;
+    
+    
     private bool isSpawn = false;
 
     protected override void Start(){
@@ -12,6 +16,9 @@ public class Monster : Character{
         
         // TODO: 실제 데이터 가져오기
         hp = 25;
+        attackRange = 0.5f;
+        startPos = Vector3.zero;
+        startRot = transform.rotation;
     }
 
     private void Update(){
@@ -20,7 +27,60 @@ public class Monster : Character{
         if (!isSpawn){
             return;
         }
-
+        
+        // 플레이어 타겟 찾기
+        FindClosestTarget(Spawner.playerList.ToArray());
+        
+        // 타겟이 탐지 범위 내에 없음
+        if (target == null){
+            
+            // 가운데 영역으로 이동
+            var targetPos = Vector3.Distance(startPos, transform.position);
+            if (targetPos > 0.1f){
+                transform.position = Vector3.MoveTowards(transform.position, startPos, Time.deltaTime);
+                transform.LookAt(startPos);
+                AnimatorChange(IsMove);
+            }
+            // 가운데 영역에서 대기
+            else{
+                transform.rotation = startRot;
+                AnimatorChange(IsIdle);
+            }
+            return;
+        }
+        
+        // 타겟이 이미 죽음
+        if (target.GetComponent<Character>().isDead){
+            
+            // 타겟 재탐색
+            FindClosestTarget(Spawner.monsterList.ToArray());
+        }
+        
+        // 타겟이 탐지 범위 내에 존재
+        transform.LookAt(target.position);
+        var distance = Vector3.Distance(target.position, transform.position);
+        
+        // 타겟이 공격 범위 밖에 존재
+        if (distance > attackRange && !isAttacking){
+            
+            // 타겟 방향으로 이동
+            AnimatorChange(IsMove);
+            transform.position = Vector3.MoveTowards(transform.position, target.position, Time.deltaTime);
+        }
+        // 타겟 공격
+        else if (!isAttacking){
+            
+            // TODO: 공격 애니메이션
+            isAttacking = true;
+            AnimatorChange(IsAttack);
+            
+            // TODO: 공격 이펙트 적용
+            // target.GetComponent<Player>().GetDamaged(5, false);
+            
+            // 공격 속도 적용
+            Invoke(nameof(InitAttack), attackSpeed);
+        }
+        
         // 몬스터가 이동 방향을 바라보도록
         transform.LookAt(Vector3.zero);
 
@@ -73,7 +133,7 @@ public class Monster : Character{
         isSpawn = true;
     }
 
-    public void GetDamaged(double dmg){
+    public override void GetDamaged(double dmg){
 
         // 이미 죽은 몬스터
         if (isDead){
@@ -84,8 +144,8 @@ public class Monster : Character{
         hp -= dmg;
         
         // 피격 데미지 출력
-        BaseManager.Pool.PoolingObject("DamageText").Get((value) => {
-            value.GetComponent<DamageText>().Init(transform.position, dmg, true);
+        BaseManager.Pool.PoolingObject("PlayerDamageText").Get((value) => {
+            value.GetComponent<PlayerDamageText>().SetDamageText(transform.position, dmg, true);
         });
 
         // 몬스터 사망

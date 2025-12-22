@@ -9,11 +9,19 @@ public class Spawner : MonoBehaviour{
     public float mMaximumSpawnRange = 5.0f; // 몬스터 최대 스폰 범위
     public float mMinimumSpawnRange = 3.0f; // 몬스터 최소 스폰 범위
 
+    // TODO: 플레이어 목록 (DB)에서 가져오기
+    public Player clericPlayer;
+    public Player barbarianPlayer;
+    
     public static List<Monster> monsterList = new List<Monster>();
     public static List<Player> playerList = new List<Player>();
     
     private void Start(){
         StartCoroutine(SpawnMonsterCoroutine());
+        
+        // TODO: 현재 플레이어 목록에서 가져오기
+        // playerList.Add(clericPlayer);
+        // playerList.Add(barbarianPlayer);
     }
 
     /// <summary>

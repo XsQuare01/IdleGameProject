@@ -65,6 +65,7 @@ public class Character : MonoBehaviour
     }
 
     /// <summary>
+    /// 원거리 공격으로 몬스터 공격 함수
     /// Player character의 Event function으로 등록되어 있음
     /// 따라서, 해당 프레임에 자동으로 호출됨   
     /// </summary>
@@ -81,10 +82,13 @@ public class Character : MonoBehaviour
             value.transform.position = bulletTransform.position;
 
             // TODO: bullet, muzzle 이름 변경
-            value.GetComponent<Bullet>().RangedBulletInit(target, 10, "CH_01");
+            value.GetComponent<Bullet>().PlayerRangedAttack(target, 10, "CH_01");
         });
     }
 
+    /// <summary>
+    /// 근접 공격으로 몬스터 공격 함수
+    /// </summary>
     protected virtual void Attack(){
         // 타겟 없으면 리턴
         if (target == null){
@@ -98,8 +102,12 @@ public class Character : MonoBehaviour
             value.transform.position = target.position;
 
             // TODO: bullet, muzzle 이름 변경
-            value.GetComponent<Bullet>().MeleeBulletInit(target, 10);
+            value.GetComponent<Bullet>().PlayerMeleeAttack(target, 10);
         });
+    }
+
+    public virtual void GetDamaged(double dmg){
+        
     }
     
     protected void InitAttack() => isAttacking = false;

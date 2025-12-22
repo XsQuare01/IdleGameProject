@@ -846,6 +846,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 44465731}
   m_CullTransparentMesh: 1
+--- !u!114 &68322274 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2091153120535831067, guid: 77d88b3f944dd7b4dac8fa46b3d05803, type: 3}
+  m_PrefabInstance: {fileID: 8449745302758341145}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b61dbf83d851bc24ead89e2ebc848fc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player
 --- !u!1 &76602066
 GameObject:
   m_ObjectHideFlags: 0
@@ -6123,6 +6134,8 @@ MonoBehaviour:
   mSpawnTime: 1.5
   mMaximumSpawnRange: 5
   mMinimumSpawnRange: 3
+  clericPlayer: {fileID: 68322274}
+  barbarianPlayer: {fileID: 919132149573781375}
 --- !u!1 &765107848
 GameObject:
   m_ObjectHideFlags: 0
@@ -16135,6 +16148,7 @@ MonoBehaviour:
   attackSpeed: 1
   bulletTransform: {fileID: 0}
   isDead: 0
+  characterSO: {fileID: 0}
 --- !u!1001 &3631245930069721299
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16145,7 +16159,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 564632369116541257, guid: aa2653d72ba90c0408d2a8de7ce7fefb, type: 3}
       propertyPath: m_Name
-      value: Ch_Barbarian
+      value: Barbarian
       objectReference: {fileID: 0}
     - target: {fileID: 8729948207858578251, guid: aa2653d72ba90c0408d2a8de7ce7fefb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -16206,6 +16220,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2091153120535831067, guid: 77d88b3f944dd7b4dac8fa46b3d05803, type: 3}
+      propertyPath: characterName
+      value: Cleric
+      objectReference: {fileID: 0}
     - target: {fileID: 8371613583282414045, guid: 77d88b3f944dd7b4dac8fa46b3d05803, type: 3}
       propertyPath: m_LocalScale.x
       value: 5
@@ -16260,7 +16278,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9115155794394069038, guid: 77d88b3f944dd7b4dac8fa46b3d05803, type: 3}
       propertyPath: m_Name
-      value: M_Player
+      value: Cleric
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

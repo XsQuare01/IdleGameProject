@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,7 +39,7 @@ public class Bullet : MonoBehaviour{
     /// <param name="target"></param>
     /// <param name="dmg"></param>
     /// <param name="characterName"></param>
-    public void RangedBulletInit(Transform target, double dmg, string characterName){
+    public void PlayerRangedAttack(Transform target, double dmg, string characterName){
         this.target = target;
         transform.LookAt(this.target);
         
@@ -56,12 +57,17 @@ public class Bullet : MonoBehaviour{
     /// </summary>
     /// <param name="target">공격 타겟</param>
     /// <param name="dmg">근거리 공격력</param>
-    public void MeleeBulletInit(Transform target, double dmg){
+    public void PlayerMeleeAttack(Transform target, double dmg){
         this.target = target;
+        transform.LookAt(this.target);
+        
+        targetPos = target.position;
+        damage = dmg;
+        
         if (target != null){
                 
             // 몬스터 공격
-            target.GetComponent<Monster>().GetDamaged(10);
+            target.GetComponent<Character>().GetDamaged(damage);
             bulletGetHit = true;
                 
             // 근접 공격 이펙드 발생/반환
@@ -69,6 +75,25 @@ public class Bullet : MonoBehaviour{
             StartCoroutine(ReturnMuzzles(meleeAttackParticle));
         }
     }
+    
+    /*public void MonsterMeleeAttack(Transform target, double dmg){
+        this.target = target;
+        transform.LookAt(this.target);
+        
+        targetPos = target.position;
+        damage = dmg;
+        
+        if (target != null){
+                
+            // 몬스터 공격
+            target.GetComponent<Character>().GetDamaged(damage);
+            bulletGetHit = true;
+                
+            // 근접 공격 이펙드 발생/반환
+            meleeAttackParticle.Play();
+            StartCoroutine(ReturnMuzzles(meleeAttackParticle));
+        }
+    }*/
 
     private void Update(){
 
@@ -85,7 +110,7 @@ public class Bullet : MonoBehaviour{
                 
                 // TODO: Bullet damage 수정
                 // TODO: GetComponent<> 제거
-                target.GetComponent<Monster>().GetDamaged(10);
+                target.GetComponent<Character>().GetDamaged(damage);
                 bulletGetHit = true;
                 
                 // 충돌 시 bullet 비활성화 & muzzle 활성화

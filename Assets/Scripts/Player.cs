@@ -1,13 +1,34 @@
 using UnityEngine;
 
 public class Player : Character{
+    public CharacterScriptableObject characterSO;
+    
     private Vector3 startPos;
     private Quaternion startRot;
     
     protected override void Start(){
         base.Start();
+        
+        // TODO: 체력 테스트
+        hp = 20;
+        
+        // TODO: 캐릭터 목록 받아오기
+        DataSet(Resources.Load<CharacterScriptableObject>("ScriptableObjects/" + gameObject.name));
+        Spawner.playerList.Add(this);
+        
         startPos = transform.position;
         startRot = transform.rotation;
+        
+        
+    }
+
+    /// <summary>
+    /// Scriptable object에서 정보 받아오는 함수
+    /// </summary>
+    /// <param name="so"></param>
+    private void DataSet(CharacterScriptableObject so){
+        characterSO = so;
+        attackRange = so.attackRange;
     }
 
     private void Update(){
@@ -57,6 +78,46 @@ public class Player : Character{
             
             // 공격 속도 적용
             Invoke(nameof(InitAttack), attackSpeed);
+        }
+    }
+    
+    public override void GetDamaged(double dmg){
+
+        // 이미 죽은 플레이어
+        if (isDead){
+            return;
+        }
+        
+        // 플레이어 체력 감소
+        hp -= dmg;
+        
+        // 피격 데미지 출력
+        BaseManager.Pool.PoolingObject("MonsterDamageText").Get((value) => {
+            value.GetComponent<MonsterDamageText>().SetDamageText(transform.position, dmg, true);
+        });
+
+        // 플레이어 사망
+        if (hp <= 0){
+            
+            // 사망 처리
+            isDead = true;
+            Spawner.playerList.Remove(this);
+            
+            // 몬스터 사망 이펙트
+            var smokeObj = BaseManager.Pool.PoolingObject("Smoke").Get((value) => {
+                
+                // 0.5f 더하는 이유: smoke가 조금 높게 스폰되도록 함
+                value.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+                
+                // BaseManager에서 particle을 제거
+                // TODO: Particle 이름 enum으로 변경 ("Smoke" -> Smoke)
+                BaseManager.Instance.ReturnParticle(value, "Smoke");
+                
+                // StartCoroutine(ReturnParticle("Smoke", value, value.GetComponent<ParticleSystem>()));
+            });
+            
+            // TODO: 플레이어 사망 처리
+            gameObject.SetActive(false);
         }
     }
 }
