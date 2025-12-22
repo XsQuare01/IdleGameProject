@@ -11,7 +11,7 @@ public class Monster : Character{
         base.Start();
         
         // TODO: 실제 데이터 가져오기
-        hp = 5;
+        hp = 25;
     }
 
     private void Update(){

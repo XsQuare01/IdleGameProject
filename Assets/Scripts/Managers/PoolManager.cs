@@ -99,7 +99,7 @@ public class PoolManager
     private void AddQueue(string path){
         
         // Pool에서 object 생성
-        var go = BaseManager.Instance.InstantiatePath(path);
+        var go = BaseManager.Instance.InstantiatePath("PoolObjects/" + path);
         go.transform.SetParent(poolDictionary[path].parentTransform);
         // go.transform.parent = poolDictionary[path].parentTransform;
 

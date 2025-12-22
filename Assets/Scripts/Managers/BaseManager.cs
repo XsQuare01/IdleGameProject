@@ -7,6 +7,7 @@ public class BaseManager : MonoBehaviour
     public static BaseManager Instance = null;
 
     public static PoolManager Pool{ get; } = new PoolManager();
+    public static PlayerManager Player{ get;  } = new PlayerManager();
 
     private void Awake(){
         Initialize();
@@ -16,6 +17,9 @@ public class BaseManager : MonoBehaviour
         if (Instance == null){
             Instance = this;
             Pool.Initialize(transform);
+            
+            // TODO: 서버에서 사용자 데이터를 읽어오도록
+            Player.Initialize();
             DontDestroyOnLoad(gameObject);
         }
         else{

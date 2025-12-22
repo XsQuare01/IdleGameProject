@@ -75,13 +75,30 @@ public class Character : MonoBehaviour
         }
         
         // 탄환 소환
-        BaseManager.Pool.PoolingObject("Bullet").Get((value) => {
+        BaseManager.Pool.PoolingObject("AttackHelper").Get((value) => {
             
             // 탄환 위치 변경
             value.transform.position = bulletTransform.position;
 
             // TODO: bullet, muzzle 이름 변경
-            value.GetComponent<Bullet>().Init(target, 10, "CH_01");
+            value.GetComponent<Bullet>().RangedBulletInit(target, 10, "CH_01");
+        });
+    }
+
+    protected virtual void Attack(){
+        // 타겟 없으면 리턴
+        if (target == null){
+            return;
+        }
+        
+        // 탄환 소환
+        BaseManager.Pool.PoolingObject("AttackHelper").Get((value) => {
+            
+            // 타겟의 위치에서 생성
+            value.transform.position = target.position;
+
+            // TODO: bullet, muzzle 이름 변경
+            value.GetComponent<Bullet>().MeleeBulletInit(target, 10);
         });
     }
     

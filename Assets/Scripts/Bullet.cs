@@ -10,6 +10,8 @@ public class Bullet : MonoBehaviour{
     private string characterName;
 
     private bool bulletGetHit = false;
+
+    [SerializeField] private ParticleSystem meleeAttackParticle;
     
     Dictionary<string, GameObject> projectiles = new Dictionary<string, GameObject>();
     Dictionary<string, ParticleSystem> muzzles = new Dictionary<string, ParticleSystem>();
@@ -30,9 +32,16 @@ public class Bullet : MonoBehaviour{
         }
     }
     
-    public void Init(Transform target, double dmg, string characterName){
+    /// <summary>
+    /// 원거리 공격 bullet 초기화
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="dmg"></param>
+    /// <param name="characterName"></param>
+    public void RangedBulletInit(Transform target, double dmg, string characterName){
         this.target = target;
         transform.LookAt(this.target);
+        
         targetPos = target.position;
         damage = dmg;
         bulletGetHit = false;
@@ -40,6 +49,25 @@ public class Bullet : MonoBehaviour{
         
         // bullet 활성화
         projectiles[characterName].gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// 근거리 공격 bullet 초기화
+    /// </summary>
+    /// <param name="target">공격 타겟</param>
+    /// <param name="dmg">근거리 공격력</param>
+    public void MeleeBulletInit(Transform target, double dmg){
+        this.target = target;
+        if (target != null){
+                
+            // 몬스터 공격
+            target.GetComponent<Monster>().GetDamaged(10);
+            bulletGetHit = true;
+                
+            // 근접 공격 이펙드 발생/반환
+            meleeAttackParticle.Play();
+            StartCoroutine(ReturnMuzzles(meleeAttackParticle));
+        }
     }
 
     private void Update(){
@@ -74,7 +102,7 @@ public class Bullet : MonoBehaviour{
         yield return new WaitWhile(() => muzzle.IsAlive(true));
         
         // Object pool로 다시 돌려놓기
-        BaseManager.Pool.poolDictionary["Bullet"].Return(gameObject);
+        BaseManager.Pool.poolDictionary["AttackHelper"].Return(gameObject);
     }
     
 }

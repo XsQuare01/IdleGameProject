@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: d554b235cd899284086db46f1bfbd521, type: 3}
       propertyPath: m_LocalScale.x
-      value: 7
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d554b235cd899284086db46f1bfbd521, type: 3}
       propertyPath: m_LocalScale.y
-      value: 7
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d554b235cd899284086db46f1bfbd521, type: 3}
       propertyPath: m_LocalScale.z
-      value: 7
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d554b235cd899284086db46f1bfbd521, type: 3}
       propertyPath: m_LocalPosition.x
@@ -114,5 +114,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca4c4519414ad85429b8394fdd183744, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster
-  mSpeed: 0.5
   animator: {fileID: 7481275987825057358}
+  hp: 0
+  attack: 0
+  attackSpeed: 1
+  bulletTransform: {fileID: 0}
+  isDead: 0
+  mSpeed: 0.5
