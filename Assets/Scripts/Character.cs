@@ -69,7 +69,7 @@ public class Character : MonoBehaviour
     /// Player character의 Event function으로 등록되어 있음
     /// 따라서, 해당 프레임에 자동으로 호출됨   
     /// </summary>
-    protected virtual void Bullet(){
+    protected virtual void RangedAttack(){
         // 타겟 없으면 리턴
         if (target == null){
             return;
@@ -81,15 +81,15 @@ public class Character : MonoBehaviour
             // 탄환 위치 변경
             value.transform.position = bulletTransform.position;
 
-            // TODO: bullet, muzzle 이름 변경
-            value.GetComponent<Bullet>().PlayerRangedAttack(target, 10, "CH_01");
+            // TODO: bullet, muzzle, characterName 이름 변경
+            value.GetComponent<Bullet>().PlayerRangedAttack(target, attack, "CH_01", BaseManager.Player.IsCritical());
         });
     }
 
     /// <summary>
     /// 근접 공격으로 몬스터 공격 함수
     /// </summary>
-    protected virtual void Attack(){
+    protected virtual void MeleeAttack(){
         // 타겟 없으면 리턴
         if (target == null){
             return;
@@ -102,13 +102,15 @@ public class Character : MonoBehaviour
             value.transform.position = target.position;
 
             // TODO: bullet, muzzle 이름 변경
-            value.GetComponent<Bullet>().PlayerMeleeAttack(target, 10);
+            value.GetComponent<Bullet>().PlayerMeleeAttack(target, attack, BaseManager.Player.IsCritical());
         });
     }
 
-    public virtual void GetDamaged(double dmg){
+    public virtual void GetDamaged(double dmg, bool isCritical = false){
         
     }
+    
+    
     
     protected void InitAttack() => isAttacking = false;
 }

@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.ComTypes;
 using UnityEngine;
 
 public class Player : Character{
@@ -5,12 +6,14 @@ public class Player : Character{
     
     private Vector3 startPos;
     private Quaternion startRot;
+
+    public GameObject trailObject;
     
     protected override void Start(){
         base.Start();
         
         // TODO: 체력 테스트
-        hp = 20;
+        hp = 20000000;
         
         // TODO: 캐릭터 목록 받아오기
         DataSet(Resources.Load<CharacterScriptableObject>("ScriptableObjects/" + gameObject.name));
@@ -29,6 +32,9 @@ public class Player : Character{
     private void DataSet(CharacterScriptableObject so){
         characterSO = so;
         attackRange = so.attackRange;
+        
+        // 캐릭터 스탯 설정
+        SetStats();
     }
 
     private void Update(){
@@ -81,11 +87,16 @@ public class Player : Character{
         }
     }
     
-    public override void GetDamaged(double dmg){
-
+    public override void GetDamaged(double dmg, bool isCritical = false){
+        
         // 이미 죽은 플레이어
         if (isDead){
             return;
+        }
+
+        // 플레이어도 크리티컬 적용...?
+        if (isCritical){
+            // dmg *= BaseManager.Player.CriticalDamage / 100;
         }
         
         // 플레이어 체력 감소
@@ -93,7 +104,7 @@ public class Player : Character{
         
         // 피격 데미지 출력
         BaseManager.Pool.PoolingObject("MonsterDamageText").Get((value) => {
-            value.GetComponent<MonsterDamageText>().SetDamageText(transform.position, dmg, true);
+            value.GetComponent<MonsterDamageText>().SetDamageText(transform.position, dmg, isCritical);
         });
 
         // 플레이어 사망
@@ -103,7 +114,7 @@ public class Player : Character{
             isDead = true;
             Spawner.playerList.Remove(this);
             
-            // 몬스터 사망 이펙트
+            // 플레이어 사망 이펙트
             var smokeObj = BaseManager.Pool.PoolingObject("Smoke").Get((value) => {
                 
                 // 0.5f 더하는 이유: smoke가 조금 높게 스폰되도록 함
@@ -120,4 +131,28 @@ public class Player : Character{
             gameObject.SetActive(false);
         }
     }
+
+    /// <summary>
+    /// 근접 공격 함수
+    /// </summary>
+    protected override void MeleeAttack(){
+        base.MeleeAttack();
+        
+        // 근접 공격 시 trail effect
+        trailObject.SetActive(true);
+        Invoke(nameof(DisableTrail), 1f);
+    }
+
+    private void DisableTrail() => trailObject.SetActive(false);
+
+    /// <summary>
+    /// 플레이어 스탯 설정
+    /// </summary>
+    public void SetStats(){
+        attack = BaseManager.Player.GetAtk(characterSO.rarity);
+        hp = BaseManager.Player.GetHp(characterSO.rarity);
+    }
+    
+    
+    
 }

@@ -40,6 +40,7 @@ public class ExpUpButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         
         // 경험치 비약 사용
         BaseManager.Player.ExpUp();
+        BaseManager.Player.StatsUp();
         
         // UI 변경
         UpdateExp();

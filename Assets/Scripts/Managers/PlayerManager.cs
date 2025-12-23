@@ -9,18 +9,41 @@ public class PlayerManager{
     private double _requiredExp;
     private double _acquiredExp;
     
-    // --- 플레이어 공격력
-    public double Atk{ get; set; }
+    /// <summary>
+    /// 플레이어 공격력
+    /// </summary>
+    public double Atk{ get; private set; }
     
-    // --- 플레이어 체력
-    public double Hp { get; set; } = 50;
+    /// <summary>
+    /// 플레이어 체력
+    /// </summary>
+    public double Hp { get; private set; } = 50;
+    
+    /// <summary>
+    /// 크리티컬 확률
+    /// </summary>
+    public float CriticalChance{ get; private set; } = 20f;
 
+    /// <summary>
+    /// 크리티컬 데미지
+    /// </summary>
+    public double CriticalDamage{ get; private set; } = 140;
+    
+    // --- 캐릭터 전투력
+    public double CombatPower{ get; private set; }
+    
+    
     // 플레이어 데이터 가져오기
     // TODO: 서버 DB에서 플레이어 데이터 가져오기
     public void Initialize(){
+        
+        // TODO: 초기 테스트 데이터
         Level = 1;
         Atk = 10;
         Hp = 50;
+        SetCombatPower();
+        
+        // 요구 경험치
         _requiredExp = float.Parse(CSVImporter.exp[Level]["EXP"].ToString());
         _acquiredExp = float.Parse(CSVImporter.exp[Level]["Get_EXP"].ToString());
     }
@@ -50,11 +73,23 @@ public class PlayerManager{
     }
 
     /// <summary>
-    /// 경험치 비약 사용 시 공격력 상승
+    /// 경험치 비약 사용 시 스탯 상승
     /// </summary>
-    public void AtkUp(){
+    public void StatsUp(){
+        // 스탯 상승
+        Atk += GetAcquiredAtk();
+        Hp += GetAcquiredHp();
+
+        // TODO: 추가 스탯 올리기
+
+        // 스탯 상승 적용
+        foreach (var player in Spawner.playerList){
+            player.SetStats();
+        }
         
-        // 경험치 비약?
+        // 전투력 갱신
+        SetCombatPower();
+        MainCanvasUI.Instance.SetCombatPowerText(CombatPower);
     }
 
     /// <summary>
@@ -113,5 +148,41 @@ public class PlayerManager{
     public double GetAcquiredHp(){
         return _acquiredExp * (Level) * 10;
     }
+
+    /// <summary>
+    /// 등급에 따른 공격력 로직
+    /// TODO: 레벨디자인에서 수정 요망
+    /// </summary>
+    /// <param name="r"></param>
+    /// <returns></returns>
+    public double GetAtk(Rarity r){
+        return Atk * ((int)r + 1);
+    }
     
+    /// <summary>
+    /// 등급에 따른 체력 로직
+    /// TODO: 레벨디자인에서 수정 요망
+    /// </summary>
+    /// <param name="r"></param>
+    /// <returns></returns>
+    public double GetHp(Rarity r){
+        return Hp * ((int)r + 1);
+    }
+    
+    /// <summary>
+    /// 크리티컬 여부 계산
+    /// </summary>
+    /// <returns></returns>
+    public bool IsCritical(){
+        return Random.Range(0.0f, 100.0f) <= BaseManager.Player.CriticalChance;
+    }
+
+    /// <summary>
+    /// 총 전투력 계산 함수
+    /// TODO: 전투력 계산 로직 변경
+    /// </summary>
+    /// <returns></returns>
+    private void SetCombatPower(){
+        CombatPower = Atk * 2.0 + Hp * 0.5;
+    }
 }

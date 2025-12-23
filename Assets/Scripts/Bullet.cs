@@ -10,6 +10,9 @@ public class Bullet : MonoBehaviour{
     private double damage;
     private string characterName;
 
+    private bool isRangedAttack;
+    private bool isCritical;
+
     private bool bulletGetHit = false;
 
     [SerializeField] private ParticleSystem meleeAttackParticle;
@@ -36,38 +39,75 @@ public class Bullet : MonoBehaviour{
     /// <summary>
     /// 원거리 공격 bullet 초기화
     /// </summary>
-    /// <param name="target"></param>
-    /// <param name="dmg"></param>
-    /// <param name="characterName"></param>
-    public void PlayerRangedAttack(Transform target, double dmg, string characterName){
+    /// <param name="target">타겟 위치</param>
+    /// <param name="dmg">bullet 데미지</param>
+    /// <param name="characterName">bullet 소환 플레이어</param>
+    /// <param name="isCritical">크리티컬 공격 여부</param>
+    public void PlayerRangedAttack(Transform target, double dmg, string characterName, bool isCritical = false){
         this.target = target;
         transform.LookAt(this.target);
         
         targetPos = target.position;
         damage = dmg;
+        
         bulletGetHit = false;
         this.characterName = characterName;
+        
+        
+        isRangedAttack = true;
+        this.isCritical = isCritical;
         
         // bullet 활성화
         projectiles[characterName].gameObject.SetActive(true);
     }
 
     /// <summary>
-    /// 근거리 공격 bullet 초기화
+    /// 플레이어의 근거리 공격 bullet 초기화
     /// </summary>
     /// <param name="target">공격 타겟</param>
     /// <param name="dmg">근거리 공격력</param>
-    public void PlayerMeleeAttack(Transform target, double dmg){
+    /// <param name="isCritical">크리티컬 공격 여부</param>
+    public void PlayerMeleeAttack(Transform target, double dmg, bool isCritical = false){
         this.target = target;
         transform.LookAt(this.target);
         
         targetPos = target.position;
         damage = dmg;
+        isRangedAttack = false;
+        this.isCritical = isCritical;
         
         if (target != null){
                 
             // 몬스터 공격
-            target.GetComponent<Character>().GetDamaged(damage);
+            target.GetComponent<Character>().GetDamaged(damage, isCritical);
+            bulletGetHit = true;
+                
+            // 근접 공격 이펙드 발생/반환
+            meleeAttackParticle.Play();
+            StartCoroutine(ReturnMuzzles(meleeAttackParticle));
+        }
+    }
+
+    /// <summary>
+    /// 몬스터의 근접 공격
+    /// TODO: 몬스터/플레이어 간 근접공격 로직 변경 가능성을 염두하여 함수 분리
+    /// </summary>
+    /// <param name="target">타겟 플레이어 위치</param>
+    /// <param name="dmg">몬스터 공격력</param>
+    /// <param name="isCritical">크리티컬 여부</param>
+    public void MonsterMeleeAttack(Transform target, double dmg, bool isCritical = false){
+        this.target = target;
+        transform.LookAt(this.target);
+        
+        targetPos = target.position;
+        damage = dmg;
+        isRangedAttack = false;
+        this.isCritical = isCritical;
+        
+        if (target != null){
+                
+            // 플레이어 공격
+            target.GetComponent<Character>().GetDamaged(damage, isCritical);
             bulletGetHit = true;
                 
             // 근접 공격 이펙드 발생/반환
@@ -76,25 +116,6 @@ public class Bullet : MonoBehaviour{
         }
     }
     
-    /*public void MonsterMeleeAttack(Transform target, double dmg){
-        this.target = target;
-        transform.LookAt(this.target);
-        
-        targetPos = target.position;
-        damage = dmg;
-        
-        if (target != null){
-                
-            // 몬스터 공격
-            target.GetComponent<Character>().GetDamaged(damage);
-            bulletGetHit = true;
-                
-            // 근접 공격 이펙드 발생/반환
-            meleeAttackParticle.Play();
-            StartCoroutine(ReturnMuzzles(meleeAttackParticle));
-        }
-    }*/
-
     private void Update(){
 
         if (bulletGetHit){
@@ -106,19 +127,20 @@ public class Bullet : MonoBehaviour{
         transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * bulletSpeed);
 
         if (Vector3.Distance(transform.position, targetPos) <= 0.1f){
-            if (target != null){
-                
-                // TODO: Bullet damage 수정
-                // TODO: GetComponent<> 제거
-                target.GetComponent<Character>().GetDamaged(damage);
-                bulletGetHit = true;
-                
-                // 충돌 시 bullet 비활성화 & muzzle 활성화
-                projectiles[characterName].gameObject.SetActive(false);
-                muzzles[characterName].Play();
-                
-                StartCoroutine(ReturnMuzzles(muzzles[characterName]));
+            if (target == null){
+                return;
             }
+            
+            // TODO: Bullet damage 수정
+            // TODO: GetComponent<> 제거
+            target.GetComponent<Character>().GetDamaged(damage, isCritical);
+            bulletGetHit = true;
+            
+            // 충돌 시 bullet 비활성화 & muzzle 활성화
+            projectiles[characterName].gameObject.SetActive(false);
+            muzzles[characterName].Play();
+                
+            StartCoroutine(ReturnMuzzles(muzzles[characterName]));
         }
     }
 

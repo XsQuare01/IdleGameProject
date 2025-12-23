@@ -1254,7 +1254,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 7, y: 7, z: 7}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3339845894225446863}
@@ -1301,3 +1301,5 @@ MonoBehaviour:
   attackSpeed: 1
   bulletTransform: {fileID: 6059376222540032755}
   isDead: 0
+  characterSO: {fileID: 11400000, guid: 3a684b3e2606ee743bc1426135a4cd02, type: 2}
+  trailObject: {fileID: 0}

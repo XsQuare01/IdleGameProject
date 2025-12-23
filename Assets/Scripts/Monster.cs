@@ -16,6 +16,7 @@ public class Monster : Character{
         
         // TODO: 실제 데이터 가져오기
         hp = 25;
+        attack = 1;
         attackRange = 0.5f;
         startPos = Vector3.zero;
         startRot = transform.rotation;
@@ -133,11 +134,16 @@ public class Monster : Character{
         isSpawn = true;
     }
 
-    public override void GetDamaged(double dmg){
+    public override void GetDamaged(double dmg, bool isCritical = false){
 
         // 이미 죽은 몬스터
         if (isDead){
             return;
+        }
+        
+        // 크리티컬 적용
+        if (isCritical){
+            dmg *= BaseManager.Player.CriticalDamage / 100;
         }
         
         // 몬스터 체력 감소
@@ -145,7 +151,7 @@ public class Monster : Character{
         
         // 피격 데미지 출력
         BaseManager.Pool.PoolingObject("PlayerDamageText").Get((value) => {
-            value.GetComponent<PlayerDamageText>().SetDamageText(transform.position, dmg, true);
+            value.GetComponent<PlayerDamageText>().SetDamageText(transform.position, dmg, isCritical);
         });
 
         // 몬스터 사망
@@ -184,5 +190,23 @@ public class Monster : Character{
             // TODO: 몬스터 이름 string이 아닌 enum으로 변경 ("Skeleton" -> Skeleton)
             BaseManager.Pool.poolDictionary["Skeleton"].Return(gameObject);
         }
+    }
+
+    protected override void MeleeAttack(){
+        // 타겟 없으면 리턴
+        if (target == null){
+            return;
+        }
+        
+        // 탄환 소환
+        BaseManager.Pool.PoolingObject("AttackHelper").Get((value) => {
+            
+            // 타겟의 위치에서 생성
+            value.transform.position = target.position;
+
+            // TODO: bullet, muzzle 이름 변경
+            // TODO: 몬스터의 크리티컬 확률/데미지 적용
+            value.GetComponent<Bullet>().MonsterMeleeAttack(target, attack, false);
+        });
     }
 }

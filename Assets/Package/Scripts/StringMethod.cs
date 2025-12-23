@@ -142,9 +142,10 @@ public static partial class StringMethod
         string unitString = string.Empty;
 
         string[] partsSplit = number.ToString("E").Split('+');
-
+        
         if (partsSplit.Length < 2)
         {
+            
             UnityEngine.Debug.LogWarning(string.Format("Failed - ToCurrencyString({0})", number));
             return Zero;
         }
