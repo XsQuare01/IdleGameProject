@@ -1,7 +1,10 @@
 using UnityEngine;
+using UnityEngine.U2D;
 
-public class Utils : MonoBehaviour
+public class Utils
 {
+    public static SpriteAtlas Atlas = Resources.Load<SpriteAtlas>("Atlases/HeroProfileAtlas");
+    
     /// <summary>
     /// 희귀도에 따른 색상 반환 utility 함수
     /// </summary>
@@ -18,4 +21,12 @@ public class Utils : MonoBehaviour
             _ => "<color=#000000>"
         };
     }
+
+    public static Sprite GetAtlas(string str){
+        Debug.Log(Atlas.name);
+        Debug.Log("Atlas name: " + str);
+        return Atlas.GetSprite(str);
+    }
+
+    
 }

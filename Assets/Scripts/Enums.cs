@@ -8,3 +8,13 @@ public enum Rarity{
     Unique,
     Legendary,
 }
+
+public enum CharacterName{
+    Cleric,
+    Barbarian,
+    Spearman,
+    Hunter,
+    WhiteElementalist,
+    BlackElementalist,
+    Berserker
+}
