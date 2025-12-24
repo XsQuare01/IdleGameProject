@@ -6,8 +6,8 @@ public class Spawner : MonoBehaviour{
 
     public int      mCount = 2;             // 몬스터 마릿수
     public float    mSpawnTime = 1.5f;         // 몬스터 스폰 주기
-    public float mMaximumSpawnRange = 5.0f; // 몬스터 최대 스폰 범위
-    public float mMinimumSpawnRange = 3.0f; // 몬스터 최소 스폰 범위
+    public float mMaximumSpawnRange = 7.0f; // 몬스터 최대 스폰 범위
+    public float mMinimumSpawnRange = 6.0f; // 몬스터 최소 스폰 범위
 
     // TODO: 플레이어 목록 (DB)에서 가져오기
     public Player clericPlayer;

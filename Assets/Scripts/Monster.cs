@@ -14,6 +14,9 @@ public class Monster : Character{
     protected override void Start(){
         base.Start();
         
+        // 몬스터 추적 범위 - 맵 전체
+        targetRange = Mathf.Infinity;
+        
         // TODO: 실제 데이터 가져오기
         hp = 25;
         attack = 1;

@@ -8,6 +8,8 @@ public class BaseManager : MonoBehaviour
 
     public static PoolManager Pool{ get; } = new PoolManager();
     public static PlayerManager Player{ get;  } = new PlayerManager();
+    
+    public static CameraManager Camera{ get;  } = new CameraManager();
 
     private void Awake(){
         Initialize();
