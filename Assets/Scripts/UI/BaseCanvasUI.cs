@@ -24,5 +24,7 @@ public class BaseCanvasUI : MonoBehaviour{
     public Transform GetLayer(int value){
         return layer.GetChild(value);
     }
+    
+    
 
 }

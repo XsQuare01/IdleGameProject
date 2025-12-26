@@ -13,9 +13,8 @@ public class HeroUI : BaseUI{
     Dictionary<string, CharacterScriptableObject> heroDic = new Dictionary<string, CharacterScriptableObject>();
 
     private int currentSortOrder = 0;
-    
-    private void Start(){
-        
+
+    public override bool Init(){
         // Scriptable object로 생성된 영웅 정보 받아오기
         var data = Resources.LoadAll<CharacterScriptableObject>("ScriptableObjects");
         
@@ -35,6 +34,8 @@ public class HeroUI : BaseUI{
             heroProfileUIList.Add(profile);
             profile.Initialize(item.Value);
         }
+        
+        return base.Init();
     }
 
     /// <summary>
