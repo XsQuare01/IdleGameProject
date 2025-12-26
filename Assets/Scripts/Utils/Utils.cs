@@ -23,8 +23,6 @@ public class Utils
     }
 
     public static Sprite GetAtlas(string str){
-        Debug.Log(Atlas.name);
-        Debug.Log("Atlas name: " + str);
         return Atlas.GetSprite(str);
     }
 

@@ -22,6 +22,10 @@ public class HeroProfileUI : BaseUI{
     public void Initialize(CharacterScriptableObject so){
         heroRarityImage.sprite = Utils.GetAtlas(so.rarity.ToString());
         heroProfileImage.sprite = Utils.GetAtlas(so.characterName.ToString());
+        
+        // heroProfileImage.SetNativeSize();
+        // var rect = heroProfileImage.GetComponent<RectTransform>();
+        //rect.sizeDelta = new Vector2(rect.sizeDelta.x * 0.5f, rect.sizeDelta.y * 0.5f);
     }
     
 }
